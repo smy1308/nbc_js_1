@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>내배캠 영화 검색 사이트</title>
+    <style>
+      .main {
+        display: flex;
+        justify-content: center;
+        margin: 20px auto 20px auto;
+        padding: 30px;
+      }
+      .MovieSearch {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: 20px auto 20px auto;
+        padding: 20px;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+      }
+      .MovieSearch > label {
+        font-size: 20px;
+      }
+      .MovieSearch > input {
+        margin-left: 20px;
+        min-width: 200px;
+        padding: 5px 10px;
+      }
+      .MovieSearch > button {
+        margin-left: 10px;
+        padding: 5px;
+      }
+      .movieList {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        justify-content: center;
+      }
+      .movie-card {
+        margin: 20px;
+        padding: 20px;
+        width: 300px;
+        height: 830px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+          0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        display: block;
+        justify-self: center;
+        cursor: pointer;
+      }
+      .movie-card > img {
+        width: 100%;
+        border-radius: 8px;
+      }
+      .movie-card > h4 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .movie-card > h5 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <header>
+        <h1>TOP RATED MOVIES COLLECTION</h1>
+      </header>
+    </div>
+    <div class="MovieSearch">
+      <label>SEARCH MOVIE :</label>
+      <input type="text" id="searchInput" placeholder="movie title" />
+      <button type="button" onclick="handleSearch()" ; id="search-btn">
+        Search
+      </button>
+      <ul id="Listdata"></ul>
+    </div>
+    <section class="movieList">
+      <!-- <div class="movie-card" onclick="alert('id값')">
+        <img src="##" />
+        <h3 class="title">제목</h3>
+        <h4 class="vote_average">평점</h4>
+        <h5 class="overview">줄거리</h5>
+      </div> -->
+    </section>
+    <script>
+      let a = [];
+      function ajax() {
+        const options = {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMjg1OGNiNzE4Zjc3NGJiZTEzOTk2MTQzZWEyOTlhZSIsInN1YiI6IjY1MzA5ODAwMzBmNzljMDBjNGFjNGEyMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TlO9i5wEiYoCFkOsh-M8Y2-GiRM_KMMnwI3lURwOgck",
+          },
+        };
+        fetch(
+          "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
+          options
+        )
+          .then(function (response) {
+            if (response.status != 200) {
+              alert("서버와의 통신에 실패했습니다");
+            } else {
+              return response.json();
+            }
+          })
+          .then(function (movieData) {
+            const movies = movieData.results;
+            console.log(movies);
+            let movieList = document.querySelector(".movieList");
+            for (let x = 0; x < movies.length; x++) {
+              a.push(movies[x]);
+            }
+            let tag = "";
+            for (let i = 0; i < a.length; i++) {
+              let title = a[i].title;
+              let vote_average = a[i].vote_average;
+              let overview = a[i].overview;
+              let poster_path = a[i].poster_path;
+              let id = a[i].id;
+              const baseurl = "http://image.tmdb.org/t/p/w500";
+              const poster = baseurl + a[i].poster_path;
+              tag += `<div class="movie-card" onclick=msg(${id})>`;
+              tag += '<img src="' + poster + '"/>';
+              tag += '<h3 class="title">' + title + "</h3>";
+              tag += '<h5 class="vote_average">' + vote_average + "</h5>";
+              tag += '<h4 class="overview">' + overview + "</h4>";
+              tag += '<h6 class="poster_path">' + poster_path + "</h6>";
+              tag += "</div>";
+            }
+            movieList.innerHTML = tag;
+          });
+      }
+      (function () {
+        ajax();
+      })();
+      function msg(id) {
+        alert("id: " + id + " 입니다.");
+      }
+      function handleSearch() {
+        let Input = document.querySelector("input");
+        console.log("서치", a);
+        let searchId = Input.value;
+        a.forEach((b) => {
+          console.log(b);
+          if (b.title.toLowerCase().includes(searchId.toLowerCase())) {
+            console.log("포함");
+          } else {
+            console.log("포함안됨");
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
