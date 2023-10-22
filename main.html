@@ -101,7 +101,6 @@
     </section>
 
     <script>
-      // function ajax() {
       let a = [];
 
       const options = {
@@ -155,11 +154,6 @@
 
           movieList.innerHTML = tag;
         });
-      // }
-
-      // (function () {
-      //   ajax();
-      // })();
 
       function msg(id) {
         alert("id: " + id + " 입니다.");
@@ -181,12 +175,6 @@
       function handleSearch() {
         let Input = document.querySelector("input");
         let searchId = Input.value;
-
-        if (a.includes(searchId)) {
-          console.log("포함");
-        } else {
-          console.log("포함안됨");
-        }
       }
     </script>
   </body>

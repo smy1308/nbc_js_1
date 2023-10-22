@@ -48,9 +48,14 @@
         display: block;
         justify-self: center;
         cursor: pointer;
+        transition: background-color 0.03s;
+      }
+      .movie-card:hover {
+        transform: scale(1.05);
       }
       .movie-card > img {
         width: 100%;
+        height: auto;
         border-radius: 8px;
       }
       .movie-card > h4 {
@@ -60,6 +65,12 @@
       .movie-card > h5 {
         margin-top: 10px;
         margin-bottom: 10px;
+      }
+      .hide {
+        display: none;
+      }
+      .show {
+        display: block;
       }
     </style>
   </head>
@@ -72,7 +83,7 @@
     <div class="MovieSearch">
       <label>SEARCH MOVIE :</label>
       <input type="text" id="searchInput" placeholder="movie title" />
-      <button type="button" onclick="handleSearch()" ; id="search-btn">
+      <button type="button" onclick="handleSearch()" id="search-btn">
         Search
       </button>
       <ul id="Listdata"></ul>
@@ -123,7 +134,7 @@
               let id = a[i].id;
               const baseurl = "http://image.tmdb.org/t/p/w500";
               const poster = baseurl + a[i].poster_path;
-              tag += `<div class="movie-card" onclick=msg(${id})>`;
+              tag += `<div class="movie-card" onclick="msg(${id})">`;
               tag += '<img src="' + poster + '"/>';
               tag += '<h3 class="title">' + title + "</h3>";
               tag += '<h5 class="vote_average">' + vote_average + "</h5>";
@@ -142,14 +153,18 @@
       }
       function handleSearch() {
         let Input = document.querySelector("input");
-        console.log("서치", a);
-        let searchId = Input.value;
-        a.forEach((b) => {
-          console.log(b);
-          if (b.title.toLowerCase().includes(searchId.toLowerCase())) {
-            console.log("포함");
+        let searchId = Input.value.toLowerCase();
+
+        let movieCard = document.querySelectorAll(".movie-card");
+
+        movieCard.forEach((card) => {
+          let title = card.querySelector(".title").textContent.toLowerCase();
+          if (title.includes(searchId)) {
+            card.classList.add("show");
+            card.classList.remove("hide");
           } else {
-            console.log("포함안됨");
+            card.classList.remove("show");
+            card.classList.add("hide");
           }
         });
       }
