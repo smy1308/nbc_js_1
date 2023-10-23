@@ -1,3 +1,20 @@
+function handleSearch() {
+    let Input = document.querySelector("input");
+    let searchId = Input.value.toLowerCase();
+
+    let movieCard = document.querySelectorAll(".movie-card");
+
+    movieCard.forEach((card) => {
+      let title = card.querySelector(".title").textContent.toLowerCase();
+      if (title.includes(searchId)) {
+        card.classList.add("show");
+        card.classList.remove("hide");
+      } else {
+        card.classList.remove("show");
+        card.classList.add("hide");
+      }
+    });
+  }
 // let Input = document.querySelector("input");
 // let searchId = Input.value;
 
