@@ -135,13 +135,13 @@
     </div>
     <div class="MovieSearch">
       <label>SEARCH MOVIE :</label>
-      <input type="text" id="searchInput" placeholder="movie title" />
-      <button
-        type="button"
-        onclick="handleSearch()"
-        onkeypress="if(event.keyCode == 13){handleSearch();}"
-        id="search-btn"
-      >
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="movie title"
+        onkeyup="handleSearch();"
+      />
+      <button type="button" onclick="handleSearch()" id="search-btn">
         <img
           scr="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E"
         />
@@ -158,7 +158,7 @@
     </section>
     <script>
       let a = [];
-      function ajax() {
+      (function () {
         const options = {
           method: "GET",
           headers: {
@@ -178,55 +178,51 @@
               return response.json();
             }
           })
-          .then(function (movieData) {
+          .then((movieData) => {
             const movies = movieData.results;
-            console.log(movies);
-            let movieList = document.querySelector(".movieList");
-            for (let x = 0; x < movies.length; x++) {
-              a.push(movies[x]);
-            }
-            let tag = "";
-            for (let i = 0; i < a.length; i++) {
-              let title = a[i].title;
-              let vote_average = a[i].vote_average;
-              let overview = a[i].overview;
-              let poster_path = a[i].poster_path;
-              let id = a[i].id;
-              const baseurl = "http://image.tmdb.org/t/p/w500";
-              const poster = baseurl + a[i].poster_path;
-              tag += `<div class="movie-card" onclick="msg(${id})">`;
-              tag += '<img src="' + poster + '"/>';
-              tag += '<h2 class="title">' + title + "</h2>";
-              tag += '<h4 class="vote_average">' + vote_average + "</h4>";
-              tag += '<h4 class="overview">' + overview + "</h4>";
-              tag += '<h6 class="poster_path">' + poster_path + "</h6>";
-              tag += "</div>";
-            }
-            movieList.innerHTML = tag;
+            const movieList = document.querySelector(".movieList");
+
+            movieList.innerHTML = movies
+              .map((movie) => {
+                const { title, vote_average, overview, poster_path, id } =
+                  movie;
+                const baseurl = "http://image.tmdb.org/t/p/w500";
+                const poster = baseurl + poster_path;
+
+                return `
+                <div class="movie-card" onclick="msg(${id})">
+                <img src="${poster}"/>
+                <h3 class="title">${title}</h3>
+                <h4 class="vote_average">${vote_average}</h4>
+                <h4 class="overview">${overview}</h4>
+                <h6 class="poster_path">${poster_path}</h6>
+                </div>
+                `;
+              })
+              .join("");
           });
-      }
-      (function () {
-        ajax();
       })();
       function msg(id) {
         alert("id: " + id + " 입니다.");
       }
       function handleSearch() {
-        let Input = document.querySelector("input");
-        let searchId = Input.value.toLowerCase();
+        if (window.event.keyCode == 13) {
+          let Input = document.querySelector("input");
+          let searchId = Input.value.toLowerCase();
 
-        let movieCard = document.querySelectorAll(".movie-card");
+          let movieCard = document.querySelectorAll(".movie-card");
 
-        movieCard.forEach((card) => {
-          let title = card.querySelector(".title").textContent.toLowerCase();
-          if (title.includes(searchId)) {
-            card.classList.add("show");
-            card.classList.remove("hide");
-          } else {
-            card.classList.remove("show");
-            card.classList.add("hide");
-          }
-        });
+          movieCard.forEach((card) => {
+            let title = card.querySelector(".title").textContent.toLowerCase();
+            if (title.includes(searchId)) {
+              card.classList.add("show");
+              card.classList.remove("hide");
+            } else {
+              card.classList.remove("show");
+              card.classList.add("hide");
+            }
+          });
+        }
       }
     </script>
   </body>
